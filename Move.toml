@@ -1,0 +1,11 @@
+[package]
+name = "AlphabizTask"
+version = "0.0.1"
+
+[addresses]
+ModAddr = "_"
+
+[dependencies]
+#AptosFramework = { git = "https://github.com/aptos-labs/aptos-core.git", subdir="aptos-move/framework", rev = "39bdd6acf1bcf523970b6be057f884a848712c7c", addr_subst = { "Std" = "0x1" }}
+AptosFramework = { local = "../../GitHub/aptos-core/aptos-move/framework/aptos-framework" }
+#MoveStdlib = { git = "https://github.com/move-language/move.git", subdir="language/move-stdlib", rev = "70e62e08e57a128562085e4dd526950262654a28", addr_subst = { "std" = "0x1" } }
