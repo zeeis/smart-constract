@@ -1,5 +1,5 @@
-# smart-constract
-AptosFramework based Move smart constract for alphabiz-app credits
+# smart-contract
+AptosFramework based Move smart contract for alphabiz-app credits
 
 ### Prerequisites
 
