@@ -1,11 +1,11 @@
-module ModAddr::FooTaskStore3 {
-	friend ModAddr::FooTask3;
+module ModAddr::FooTaskStore4 {
+	friend ModAddr::FooTask4;
 
 	use Std::ASCII;
 	use Std::Vector;
 	use Std::Errors;
   use AptosFramework::Table::{Self, Table};
-	use ModAddr::FooTaskId3::{Self, TaskId};
+	use ModAddr::FooTaskId4::{Self, TaskId};
 
 	const ETASK_ID_DUPLICATED: u64 = 1;
 	const ETASK_ID_NOT_FOUND: u64 = 2;
@@ -15,7 +15,7 @@ module ModAddr::FooTaskStore3 {
 	struct TaskData has store {
 		id: TaskId,
 		state: u8,
-		meta_data: ASCII::String
+		meta_data: ASCII::String,
 	}
 
 	struct TaskStore has key {
@@ -53,7 +53,7 @@ module ModAddr::FooTaskStore3 {
       state: 0u8, // published
       meta_data,
     };
-		let publisher = FooTaskId3::publisher(&task_id);
+		let publisher = FooTaskId4::publisher(&task_id);
 
 		let task_table = &mut borrow_global_mut<TaskStore>(publisher).task_table;
     // assert not contains
@@ -87,7 +87,7 @@ module ModAddr::FooTaskStore3 {
 		// assert contains
 		assert_task_contains(task_id, Errors::invalid_argument(ETASK_ID_NOT_FOUND));
 
-		let publisher = FooTaskId3::publisher(task_id);
+		let publisher = FooTaskId4::publisher(task_id);
 		let task_table = & borrow_global<TaskStore>(publisher).task_table;
 		*&Table::borrow(task_table, *task_id).state
 	}
@@ -95,7 +95,7 @@ module ModAddr::FooTaskStore3 {
 	// --------------------------------------------------------------------------------------------
 
   fun assert_task_contains(task_id: &TaskId, error_code: u64) acquires TaskStore {
-    let publisher = FooTaskId3::publisher(task_id);
+    let publisher = FooTaskId4::publisher(task_id);
     let task_table = & borrow_global<TaskStore>(publisher).task_table;
     assert!(
       Table::contains(task_table, *task_id),
@@ -105,7 +105,7 @@ module ModAddr::FooTaskStore3 {
 
   fun assert_task_enabled(task_id: &TaskId, error_code: u64): (u64, u64)
   acquires TaskEnabled {
-    let (publisher, performer) = FooTaskId3::addresses_of(task_id);
+    let (publisher, performer) = FooTaskId4::addresses_of(task_id);
 
     let task_id_list = & borrow_global<TaskEnabled>(publisher).task_id_list;
     let (is_exist, list_index_1) = Vector::index_of(task_id_list, task_id);
@@ -119,7 +119,7 @@ module ModAddr::FooTaskStore3 {
   }
 
   fun assert_and_change_task_state(task_id: &TaskId, from: u8, to: u8) acquires TaskStore {
-		let publisher = FooTaskId3::publisher(task_id);
+		let publisher = FooTaskId4::publisher(task_id);
 		let task_table = &mut borrow_global_mut<TaskStore>(publisher).task_table;
   	let task_data = Table::borrow_mut<TaskId, TaskData>(task_table, *task_id);
 		// assert state == from
@@ -128,7 +128,7 @@ module ModAddr::FooTaskStore3 {
   }
 
   fun remove_enabled(task_id: &TaskId, task_index_1: u64, task_index_2: u64) acquires TaskEnabled {
-    let (publisher, performer) = FooTaskId3::addresses_of(task_id);
+    let (publisher, performer) = FooTaskId4::addresses_of(task_id);
 
 		let task_id_list = &mut borrow_global_mut<TaskEnabled>(publisher).task_id_list;
 		Vector::remove(task_id_list, task_index_1);
@@ -138,7 +138,7 @@ module ModAddr::FooTaskStore3 {
   }
 
   fun insert_disabled(task_id: &TaskId) acquires TaskDisabled {
-    let (publisher, performer) = FooTaskId3::addresses_of(task_id);
+    let (publisher, performer) = FooTaskId4::addresses_of(task_id);
 
 		let task_id_list = &mut borrow_global_mut<TaskDisabled>(publisher).task_id_list;
 		Vector::push_back(task_id_list, *task_id);
@@ -148,7 +148,7 @@ module ModAddr::FooTaskStore3 {
   }
 
   fun on_task_add(task_id: &TaskId) acquires TaskEnabled {
-    let (publisher, performer) = FooTaskId3::addresses_of(task_id);
+    let (publisher, performer) = FooTaskId4::addresses_of(task_id);
     // insert to list & emit event
 		let store = borrow_global_mut<TaskEnabled>(publisher);
 		Vector::push_back(&mut store.task_id_list, *task_id);

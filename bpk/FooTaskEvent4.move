@@ -1,8 +1,8 @@
-module ModAddr::FooTaskEvent3 {
-	friend ModAddr::FooTask3;
+module ModAddr::FooTaskEvent4 {
+	friend ModAddr::FooTask4;
 
 	use Std::Event;
-	use ModAddr::FooTaskId3::{Self, TaskId};
+	use ModAddr::FooTaskId4::{Self, TaskId};
 
 	struct TaskCreateEventStore has key {
 		task_create_events: Event::EventHandle<TaskCreateEvent>,
@@ -32,7 +32,7 @@ module ModAddr::FooTaskEvent3 {
 	}
 
 	public(friend) fun emit_task_create(task_id: &TaskId) acquires TaskCreateEventStore {
-		let (publisher, performer) = FooTaskId3::addresses_of(task_id);
+		let (publisher, performer) = FooTaskId4::addresses_of(task_id);
 
 		let store = borrow_global_mut<TaskCreateEventStore>(publisher);
 		Event::emit_event(&mut store.task_create_events, TaskCreateEvent {
@@ -45,7 +45,7 @@ module ModAddr::FooTaskEvent3 {
 	}
 
 	public(friend) fun emit_task_state_change(task_id: &TaskId, from: u8, to: u8) acquires TaskStateChangeEventStore {
-		let (publisher, performer) = FooTaskId3::addresses_of(task_id);
+		let (publisher, performer) = FooTaskId4::addresses_of(task_id);
 
 		let store = borrow_global_mut<TaskStateChangeEventStore>(publisher);
 		Event::emit_event(&mut store.task_state_change_events, TaskStateChangeEvent {

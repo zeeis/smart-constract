@@ -1,5 +1,5 @@
-module ModAddr::FooTaskId3 {
-	friend ModAddr::FooTask3;
+module ModAddr::FooTaskId4 {
+	friend ModAddr::FooTask4;
 
 	use Std::Errors;
 
@@ -35,7 +35,7 @@ module ModAddr::FooTaskId3 {
     task_id
   }
 
-  public(friend) fun get(publisher: address, performer: address, index: u128): TaskId {
+  public fun get(publisher: address, performer: address, index: u128): TaskId {
     let task_id = TaskId {
       index,
       publisher,
