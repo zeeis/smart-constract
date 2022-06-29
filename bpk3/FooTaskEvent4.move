@@ -61,11 +61,4 @@ module ModAddr::FooTaskEvent4 {
 		});
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
-
-	#[test(account = @0x1)]
-  public(script) fun test_event_init(account: signer) {
-    initialize(&account);
-  }
-
 }

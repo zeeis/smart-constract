@@ -1,9 +1,11 @@
-module ModAddr::FooTaskId4 {
-	friend ModAddr::FooTask4;
+module ModAddr::TaskId4 {
+	friend ModAddr::Task4;
 
 	use Std::Errors;
+	use Std::Signer;
 
 	const ETASK_ID_ADDRESS_SAME: u64 = 0;
+	const ETASK_ID_INVALID_SIGNER: u64 = 1;
 
 	struct TaskId has copy, drop, store {
   	index: u128,
@@ -21,9 +23,8 @@ module ModAddr::FooTaskId4 {
 		});
   }
 
-  public(friend) fun new(publisher: address, performer: address): TaskId acquires TaskIdCounter {
-    // assert pub != pfm
-    assert!(publisher != performer, Errors::invalid_argument(ETASK_ID_ADDRESS_SAME));
+  public(friend) fun new(account: &signer, publisher: address, performer: address): TaskId acquires TaskIdCounter {
+    assert_valid_arguments(account, publisher, performer);
 		let store = borrow_global_mut<TaskIdCounter>(publisher);
 		let task_index = store.counter;
     store.counter = task_index + 1;
@@ -35,7 +36,8 @@ module ModAddr::FooTaskId4 {
     task_id
   }
 
-  public fun get(publisher: address, performer: address, index: u128): TaskId {
+  public(friend) fun get(account: &signer, publisher: address, performer: address, index: u128): TaskId {
+    assert_valid_arguments(account, publisher, performer);
     let task_id = TaskId {
       index,
       publisher,
@@ -54,5 +56,13 @@ module ModAddr::FooTaskId4 {
 
 	public fun performer(task_id: &TaskId): address {
 		(*task_id).performer
+	}
+
+	fun assert_valid_arguments(account: &signer, publisher: address, performer: address) {
+    assert!(publisher != performer, Errors::invalid_argument(ETASK_ID_ADDRESS_SAME));
+		assert!(
+			Signer::address_of(account) == publisher || Signer::address_of(account) == performer,
+			Errors::invalid_argument(ETASK_ID_INVALID_SIGNER)
+		);
 	}
 }

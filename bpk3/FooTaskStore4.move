@@ -49,18 +49,16 @@ module ModAddr::FooTaskStore4 {
 
 	public(friend) fun task_add<TaskType: store>(task_id: TaskId, data: TaskType, meta_data: ASCII::String)
 	acquires TaskStore, TaskEnabled {
-		let task_holder = TaskHolder<TaskType> {
-      id: task_id,
-      state: 0u8, // published
-      data: data,
-      meta_data,
-    };
 		let publisher = FooTaskId4::publisher(&task_id);
-
 		let task_table = &mut borrow_global_mut<TaskStore<TaskType>>(publisher).task_table;
     // assert not contains
     assert!(!Table::contains(task_table, task_id), Errors::internal(ETASK_ID_DUPLICATED));
-    Table::add(task_table, copy task_id, task_holder);
+    Table::add(task_table, copy task_id, TaskHolder<TaskType> {
+		  id: task_id,
+		  state: 0u8, // TS_PUBLISHED: u8 = 0;
+		  data,
+		  meta_data,
+		});
     on_task_add<TaskType>(&task_id);
 	}
 
@@ -90,17 +88,33 @@ module ModAddr::FooTaskStore4 {
 		assert_task_contains<TaskType>(task_id, Errors::invalid_argument(ETASK_ID_NOT_FOUND));
 
 		let publisher = FooTaskId4::publisher(task_id);
-		let task_table = & borrow_global<TaskStore<TaskType>>(publisher).task_table;
+		let task_table = &mut borrow_global_mut<TaskStore<TaskType>>(publisher).task_table;
 		*&Table::borrow(task_table, *task_id).state
 	}
 
-	public(friend) fun task_data<TaskType: store + copy>(task_id: &TaskId): TaskType acquires TaskStore {
+//	public(friend) fun task_data<TaskType: store>(task_id: &TaskId): &mut TaskType
+//	acquires TaskStore {
+//		// assert contains
+//		assert_task_contains<TaskType>(task_id, Errors::invalid_argument(ETASK_ID_NOT_FOUND));
+//
+//		let publisher = FooTaskId4::publisher(task_id);
+//		let task_table = &mut borrow_global_mut<TaskStore<TaskType>>(publisher).task_table;
+//		let task_holder = Table::borrow_mut(task_table, *task_id);
+//		let data = &mut task_holder.data;
+//		data
+//	}
+
+	public(friend) fun task_holder_mut<TaskType: store>(task_id: &TaskId): &mut TaskHolder<TaskType>
+	acquires TaskStore {
 		// assert contains
 		assert_task_contains<TaskType>(task_id, Errors::invalid_argument(ETASK_ID_NOT_FOUND));
 
 		let publisher = FooTaskId4::publisher(task_id);
-		let task_table = & borrow_global<TaskStore<TaskType>>(publisher).task_table;
-		*&Table::borrow(task_table, *task_id).data
+		let task_table = &mut borrow_global_mut<TaskStore<TaskType>>(publisher).task_table;
+		let task_holder = Table::borrow_mut(task_table, *task_id);
+		task_holder
+//		let data = &mut task_holder.data;
+//		data
 	}
 
 	// --------------------------------------------------------------------------------------------

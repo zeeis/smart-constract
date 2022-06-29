@@ -4,7 +4,7 @@ module ModAddr::FooTask4 {
 	use Std::Signer;
 
   use ModAddr::FooTaskId4::{Self, TaskId};
-  use ModAddr::FooTaskStore4;
+  use ModAddr::FooTaskStore4::{Self};
   use ModAddr::FooTaskEvent4;
 
 	const ETASK: u64 = 0;
@@ -21,7 +21,7 @@ module ModAddr::FooTask4 {
     assert!(FooTaskStore4::is_initialized<TaskType>(addr), Errors::not_published(ETASK));
   }
 
-	public(script) fun initialize<TaskType: store>(account: &signer) {
+	public fun initialize<TaskType: store>(account: &signer) {
 		// assert not initialize
 		let addr = Signer::address_of(account);
     assert!(!FooTaskStore4::is_initialized<TaskType>(addr), Errors::already_published(ETASK));
@@ -31,7 +31,7 @@ module ModAddr::FooTask4 {
 		FooTaskStore4::initialize<TaskType>(account);
 	}
 
-	public(script) fun task_publish<TaskType: store>(
+	public fun task_publish<TaskType: store>(
 		publisher: &signer,
 		performer_addr: address,
 		data: TaskType,
@@ -48,7 +48,7 @@ module ModAddr::FooTask4 {
 		task_id
 	}
 
-	public(script) fun task_change_state<TaskType: store>(
+	public fun task_change_state<TaskType: store>(
 		task_id: &TaskId,
 		from: u8,
 		to: u8,
@@ -76,8 +76,8 @@ module ModAddr::FooTask4 {
 		FooTaskStore4::task_state<TaskType>(task_id)
 	}
 
-	public fun task_data<TaskType: store + copy>(task_id: &TaskId): TaskType {
-		FooTaskStore4::task_data<TaskType>(task_id)
-	}
+//	public fun task_data<TaskType: store>(task_id: &TaskId): &mut TaskHolder<TaskType> {
+//		FooTaskStore4::task_data<TaskType>(task_id)
+//	}
 
 }
