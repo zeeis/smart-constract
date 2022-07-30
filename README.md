@@ -11,6 +11,16 @@ install aptos cli
 aptos init
 ```
 
+##### Dev Network
+
+- fullnode url: `https://fullnode.devnet.aptoslabs.com`
+- faucet url: `https://faucet.devnet.aptoslabs.com`
+
+##### Local Network
+
+- fullnode url: `http://localhost:8080`
+- faucet url: `http://localhost:8000`
+
 ### Move.toml :: Dependencies
 
 use std lib: `AptosFramework`
@@ -19,23 +29,43 @@ use std lib: `AptosFramework`
 AptosFramework = { local = "<local-aptos-core>/aptos-move/framework/aptos-framework" }
 ```
 
+### Test
+
+```shell script
+aptos move test --package-dir <move-module-dir> --named-addresses ModAddr=<address>
+```
+
 ### Compile
 
 ```shell script
 aptos move compile --package-dir <move-module-dir> --named-addresses ModAddr=<address>
 ```
 
-Example
-
-- move-module-dir: `.`
-- address: `0xc089a56e7df48a8a93dd1115edaef073f17b278f7161432f4ffe35d846c490cb`
-
-```shell script
-aptos move compile --package-dir . --named-addresses ModAddr=0xc089a56e7df48a8a93dd1115edaef073f17b278f7161432f4ffe35d846c490cb
-```
-
 ### Publish
 
 ```shell script
 aptos move publish --package-dir <dir> --named-addresses ModAddr=<address>
+```
+
+## Example
+
+- move-module-dir: `.`
+- address: `a8dc8272faff7c58bc7b2c31fc540988420709a50878c8a68001e1c265de0f56`
+
+```shell script
+
+aptos move test --package-dir . --named-addresses ModAddr=a8dc8272faff7c58bc7b2c31fc540988420709a50878c8a68001e1c265de0f56
+
+```
+
+```shell script
+
+aptos move compile --package-dir . --named-addresses ModAddr=a8dc8272faff7c58bc7b2c31fc540988420709a50878c8a68001e1c265de0f56
+
+```
+
+```shell script
+
+aptos move publish --package-dir . --named-addresses ModAddr=a8dc8272faff7c58bc7b2c31fc540988420709a50878c8a68001e1c265de0f56
+
 ```
