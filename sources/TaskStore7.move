@@ -7,10 +7,10 @@ module ModAddr::TaskStore7 {
     use AptosFramework::Table::{Self, Table};
     use ModAddr::TaskId7::{Self, TaskId};
 
-    const ETASK_ID_DUPLICATED: u64 = 1;
-    const ETASK_ID_NOT_FOUND: u64 = 2;
-    const ETASK_STATE_NOT_ENABLED: u64 = 4;
-    const ETASK_STATE_NOT_MATCHED: u64 = 5;
+    const ETASK_ID_DUPLICATED: u64 = 1; //  1_0000_0010 = 402
+    const ETASK_ID_NOT_FOUND: u64 = 2;  // 10_0000_0111 = 1007
+    const ETASK_STATE_NOT_ENABLED: u64 = 4; // 0101 0001 0101 =
+    const ETASK_STATE_NOT_MATCHED: u64 = 5; // 0101_0000_0001 = 1280
 
     struct TaskHolder<TaskType: store> has store {
         id: TaskId,
@@ -62,7 +62,7 @@ module ModAddr::TaskStore7 {
 //        on_task_add<TaskType>(&task_id);
     }
 
-    public(friend) fun task_change_state<TaskType: store>(task_id: &TaskId, from: u8, to: u8, disable: bool)
+    public(friend) fun task_change_state<TaskType: store>(task_id: &TaskId, from: u8, to: u8, _disable: bool)
     acquires TaskStore/*, TaskEnabled, TaskDisabled*/ {
         // assert contains
         assert_task_contains<TaskType>(task_id);
