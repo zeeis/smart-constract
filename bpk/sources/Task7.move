@@ -1,11 +1,11 @@
-module ModAddr::Task6 {
+module ModAddr::Task7 {
     use Std::ASCII;
     use Std::Errors;
     use Std::Signer;
 
-    use ModAddr::TaskId6::{Self, TaskId};
-    use ModAddr::TaskStore6;
-    use ModAddr::TaskEvent6;
+    use ModAddr::TaskId7::{Self, TaskId};
+    use ModAddr::TaskStore7;
+    use ModAddr::TaskEvent7;
 
     const ETASK: u64 = 0;
 
@@ -18,18 +18,17 @@ module ModAddr::Task6 {
     const TS_FAILED: u8 = 6;
 
     public fun assert_initialized<TaskType: store>(addr: address) {
-        assert!(TaskStore6::is_initialized<TaskType>(addr), Errors::not_published(ETASK));
+        assert!(TaskStore7::is_initialized<TaskType>(addr), Errors::not_published(ETASK));
     }
 
     public fun initialize<TaskType: store>(account: &signer) {
         // assert not initialize
         let addr = Signer::address_of(account);
-        assert!(!TaskStore6::is_initialized<TaskType>(addr), Errors::already_published(ETASK));
+        assert!(!TaskStore7::is_initialized<TaskType>(addr), Errors::already_published(ETASK));
 
-        TaskId6::initialize(account);
-        TaskEvent6::initialize(account);
-
-        TaskStore6::initialize<TaskType>(account);
+        TaskId7::initialize(account);
+        TaskEvent7::initialize(account);
+        TaskStore7::initialize<TaskType>(account);
     }
 
     public fun task_publish<TaskType: store>(
@@ -43,9 +42,9 @@ module ModAddr::Task6 {
         assert_initialized<TaskType>(performer_addr);
 
         let meta_data = ASCII::string(meta_bytes);
-        let task_id = TaskId6::new(publisher, publisher_addr, performer_addr);
-        TaskStore6::task_add<TaskType>(task_id, data, meta_data);
-        TaskEvent6::emit_task_create(&task_id);
+        let task_id = TaskId7::new(publisher, publisher_addr, performer_addr);
+        TaskStore7::task_add<TaskType>(task_id, data, meta_data);
+        TaskEvent7::emit_task_create(&task_id);
         task_id
     }
 
@@ -55,33 +54,33 @@ module ModAddr::Task6 {
         to: u8,
         disabled: bool
     ) {
-        let (publisher, performer) = TaskId6::addresses_of(task_id);
+        let (publisher, performer) = TaskId7::addresses_of(task_id);
         assert_initialized<TaskType>(publisher);
         assert_initialized<TaskType>(performer);
 
-        TaskStore6::task_change_state<TaskType>(task_id, from, to, disabled);
-        TaskEvent6::emit_task_state_change(task_id, from, to);
+        TaskStore7::task_change_state<TaskType>(task_id, from, to, disabled);
+        TaskEvent7::emit_task_state_change(task_id, from, to);
     }
 
     public fun get_task_id_from_publisher(account: &signer, performer: address, index: u128): TaskId {
         let publisher = Signer::address_of(account);
-        TaskId6::get(account, publisher, performer, index)
+        TaskId7::get(account, publisher, performer, index)
     }
 
     public fun get_task_id_from_performer(account: &signer, publisher: address, index: u128): TaskId {
         let performer = Signer::address_of(account);
-        TaskId6::get(account, publisher, performer, index)
+        TaskId7::get(account, publisher, performer, index)
     }
 
     public fun task_state<TaskType: store>(task_id: &TaskId): u8 {
-        TaskStore6::task_state<TaskType>(task_id)
+        TaskStore7::task_state<TaskType>(task_id)
     }
 
     public fun task_data<TaskType: copy + store>(task_id: &TaskId): TaskType {
-        TaskStore6::task_data<TaskType>(task_id)
+        TaskStore7::task_data<TaskType>(task_id)
     }
 
     public fun assert_task_exists<TaskType: store>(task_id: &TaskId) {
-        TaskStore6::assert_task_contains<TaskType>(task_id);
+        TaskStore7::assert_task_contains<TaskType>(task_id);
     }
 }

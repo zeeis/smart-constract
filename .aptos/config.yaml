@@ -4,5 +4,5 @@ profiles:
     private_key: "0x0c70ee3c4b2891f7c2b42a74aecb3f2193157d7b7882d1432e0594c24b85030e"
     public_key: "0x9db206139561b44486b24a984ec2103f77df307ca2cd1ec996b6a7a72a3c6f20"
     account: a8dc8272faff7c58bc7b2c31fc540988420709a50878c8a68001e1c265de0f56
-    rest_url: "http://34.200.120.251:8080/"
+    rest_url: "http://34.200.120.251:80/"
     faucet_url: "http://34.200.120.251:8000/"
