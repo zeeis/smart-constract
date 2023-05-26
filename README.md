@@ -52,6 +52,10 @@ aptos move publish --package-dir <dir> --named-addresses ModAddr=<address>
 - move-module-dir: `.`
 - address: `a8dc8272faff7c58bc7b2c31fc540988420709a50878c8a68001e1c265de0f56`
 
+> restore my account:\
+> copy `<private_key>` from `/.aptos/config.yaml`\
+> then call `$blockchain.Dev.restoreAccount(<private_key>)` to restore your account
+
 ```shell script
 
 aptos move test --package-dir . --named-addresses ModAddr=a8dc8272faff7c58bc7b2c31fc540988420709a50878c8a68001e1c265de0f56
